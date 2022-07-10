@@ -1,0 +1,77 @@
+class LRUCache
+{
+     Node head=new Node(0,0);
+     Node tail=new Node(0,0);
+      HashMap<Integer,Node> map=new HashMap<>();
+   
+      int capacity;
+    // creating the doubly linked list......
+    class Node
+    {
+        Node prev,next;
+        int key,val;
+        Node(int key,int val)
+        {
+            this.key=key;
+            this.val=val;
+        }
+    }
+    //Constructor for initializing the cache capacity with the given value.
+    LRUCache(int cap)
+    {
+      capacity=cap;
+      head.next=tail;
+      tail.prev=head;
+      tail.next=null;
+      head.prev=null;
+    }
+
+    //Function to return value corresponding to the key.
+    public  int get(int key)
+    {
+        if(map.containsKey(key))
+        {
+           
+          Node node=map.get(key);
+          remove(node);
+          add(node);
+          return node.val;
+        }
+        else{
+            return -1;
+        }
+    }
+
+    //Function for storing key-value pair.
+
+
+    public  void set(int key, int value)
+    {
+         if(map.containsKey(key)){
+            remove(map.get(key));
+        }
+        
+        if(map.size()==capacity){
+            remove(tail.prev);
+        }
+        
+       
+        add(new Node(key,value));
+    }
+
+    public void remove(Node node){
+      map.remove(node.key);
+      node.prev.next=node.next;
+      node.next.prev=node.prev;
+    }
+
+    
+    public void add(Node node){
+        map.put(node.key,node);
+        node.prev=head;
+        node.next=head.next;
+        head.next.prev=node;
+        head.next=node;
+    }
+}
+
